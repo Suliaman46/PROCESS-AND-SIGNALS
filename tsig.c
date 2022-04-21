@@ -80,7 +80,7 @@ int main()
         }
 
         sleep(1); // one second delay between consecutive fork calls
-        
+
         #ifdef WITH_SIGNAL
             if(keyhit == 1)
             {
@@ -99,7 +99,7 @@ int main()
         else printf("parent [%ld]: All children are created \n",(long)getpid());
     #else
         printf("parent [%ld]: All children are created \n",(long)getpid());
-    #endif;
+    #endif
     
     count = 0;
     while(1)
