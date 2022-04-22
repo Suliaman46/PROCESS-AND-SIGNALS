@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
@@ -39,31 +40,31 @@ int main()
             signal(i,SIG_IGN);
         }
         signal(SIGCHLD,SIG_DFL); // Resetting SIGCHILD to defualt handler
-        signal(SIGINT, &kBInterrupt); //Setting custom handler for SIGINT
+        // signal(SIGINT, &kBInterrupt); //Setting custom handler for SIGINT
 
         // SIGACTION ALTRENATIVE
-        // struct sigaction new_action, old_action;
-        // new_action.sa_handler = &kBInterrupt;
-        // sigemptyset (&new_action.sa_mask);
-        // new_action.sa_flags = 0;
-        // sigaction(SIGINT,&new_action,NULL);
+        struct sigaction new_action, old_action;
+        new_action.sa_handler = &kBInterrupt;
+        sigemptyset (&new_action.sa_mask);
+        new_action.sa_flags = 0;
+        sigaction(SIGINT,&new_action,NULL);
     #endif
 
     int count = 0;
     while (count < NUM_CHILD) //Creating NUM_CHILD child process
     {
-        int processId = fork();
+        pid_t processId = fork();
         if (processId == 0) //Checking if we are in child process
         {
             #ifdef WITH_SIGNAL
                 signal(SIGINT,SIG_IGN); 
-                signal(SIGTERM,&termHandler);
+                // signal(SIGTERM,&termHandler);
                 // SIGACTION ALTRENATIVE 
-                // struct sigaction new_action, old_action;
-                // new_action.sa_handler = &termHandler;
-                // sigemptyset (&new_action.sa_mask);
-                // new_action.sa_flags = 0;
-                // sigaction(SIGTERM,&new_action,NULL);
+                struct sigaction new_action, old_action;
+                new_action.sa_handler = &termHandler;
+                sigemptyset (&new_action.sa_mask);
+                new_action.sa_flags = 0;
+                sigaction(SIGTERM,&new_action,NULL);
             
             #endif
             childProcess(); //Printing relavant information
@@ -121,3 +122,4 @@ int main()
     #endif
     return 0;
 }
+
